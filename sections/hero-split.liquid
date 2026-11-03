@@ -15,9 +15,43 @@
       -%}
       <div class="hero-split__media{% if i == 2 %} hero-split__media--second{% endif %}">
         {%- if video != blank -%}
-          {{ video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, image_size: '1200x', class: 'hero-split__video' }}
+          {%- liquid
+            # Largest MP4 up to 720p when Shopify has one; otherwise the only MP4 (often 1080p).
+            # Upload a compressed 720p file (2-3 MB) to keep the hero light.
+            assign video_src = blank
+            assign best_height = 0
+            for source in video.sources
+              if source.format == 'mp4' and source.height <= 720 and source.height > best_height
+                assign video_src = source.url
+                assign best_height = source.height
+              endif
+            endfor
+            if video_src == blank
+              assign mp4_sources = video.sources | where: 'format', 'mp4'
+              assign video_src = mp4_sources.first.url
+            endif
+          -%}
+          {%- comment -%} JS sets the src, so phones that show the image never download the video. {%- endcomment -%}
+          <video
+            class="hero-split__video{% if image != blank %} hero-split__video--desktop{% endif %}"
+            muted
+            loop
+            playsinline
+            preload="none"
+            poster="{{ video.preview_image | image_url: width: 1500 }}"
+            data-hero-video
+            data-src="{{ video_src }}"
+            {% if image != blank %}data-desktop-only{% endif %}
+          ></video>
+          {%- if image != blank -%}
+            {{ image | image_url: width: 1200 | image_tag: sizes: '100vw', widths: '600,900,1200', loading: 'lazy', class: 'hero-split__image hero-split__image--mobile' }}
+          {%- endif -%}
         {%- elsif image != blank -%}
-          {{ image | image_url: width: 1800 | image_tag: sizes: '(min-width: 750px) 50vw, 100vw', widths: '600,900,1200,1500,1800', loading: loading, fetchpriority: 'high', class: 'hero-split__image' }}
+          {%- if i == 1 -%}
+            {{ image | image_url: width: 1800 | image_tag: sizes: '(min-width: 750px) 50vw, 100vw', widths: '600,900,1200,1500,1800', loading: loading, fetchpriority: 'high', class: 'hero-split__image' }}
+          {%- else -%}
+            {{ image | image_url: width: 1800 | image_tag: sizes: '(min-width: 750px) 50vw, 100vw', widths: '600,900,1200,1500,1800', loading: 'lazy', class: 'hero-split__image' }}
+          {%- endif -%}
         {%- else -%}
           {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
         {%- endif -%}
@@ -35,6 +69,21 @@
       </a>
     {%- endif -%}
   </div>
+
+  {%- if section.settings.video_1 != blank or section.settings.video_2 != blank -%}
+    <button
+      type="button"
+      class="hero-split__pause icon-button"
+      data-hero-pause
+      data-label-pause="{{ 'general.pause_video' | t }}"
+      data-label-play="{{ 'general.play_video' | t }}"
+      aria-label="{{ 'general.pause_video' | t }}"
+      hidden
+    >
+      <span class="hero-split__pause-icon">{% render 'icon', name: 'pause' %}</span>
+      <span class="hero-split__play-icon">{% render 'icon', name: 'play' %}</span>
+    </button>
+  {%- endif -%}
 </section>
 
 {% schema %}

@@ -67,8 +67,9 @@
       {
         "type": "color",
         "id": "color_muted",
-        "default": "#6E6E6E",
-        "label": "Secondary text"
+        "default": "#666666",
+        "label": "Secondary text",
+        "info": "Keep it dark enough to read on the beige panels (#666666 or darker)."
       },
       {
         "type": "color",

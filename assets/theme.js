@@ -23,6 +23,57 @@
     });
   }
 
+  /* ---------- Pause buttons (WCAG 2.2.2: moving content can be paused) ---------- */
+  const setPauseButton = (button, paused) => {
+    button.classList.toggle('is-paused', paused);
+    button.setAttribute('aria-label', paused ? button.dataset.labelPlay : button.dataset.labelPause);
+  };
+
+  $$('[data-announcement-pause]').forEach((button) => {
+    const bar = button.closest('.announcement');
+    button.addEventListener('click', () => {
+      const paused = !bar.classList.contains('is-paused');
+      bar.classList.toggle('is-paused', paused);
+      setPauseButton(button, paused);
+    });
+  });
+
+  /* ---------- Hero video: load the src only where it is shown ---------- */
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isDesktop = window.matchMedia('(min-width: 750px)').matches;
+  $$('.hero-split').forEach((hero) => {
+    const videos = $$('[data-hero-video]', hero).filter((video) => {
+      if (video.closest('.hero-split__media--second') && !isDesktop) return false;
+      return !(video.hasAttribute('data-desktop-only') && !isDesktop);
+    });
+    if (!videos.length) return;
+
+    const button = $('[data-hero-pause]', hero);
+    const isPaused = () => (button ? button.classList.contains('is-paused') : reducedMotion);
+    if (button) {
+      button.hidden = false;
+      setPauseButton(button, reducedMotion);
+      button.addEventListener('click', () => {
+        const paused = !isPaused();
+        setPauseButton(button, paused);
+        videos.forEach((video) => {
+          if (!video.src) return; // not loaded yet: startVideos reads the button state
+          if (paused) video.pause();
+          else video.play().catch(() => {});
+        });
+      });
+    }
+
+    // Wait for the page to finish loading so the video never delays the first paint;
+    // the poster image shows until then.
+    const startVideos = () => videos.forEach((video) => {
+      video.src = video.dataset.src;
+      if (!isPaused()) video.play().catch(() => {});
+    });
+    if (document.readyState === 'complete') startVideos();
+    else window.addEventListener('load', startVideos, { once: true });
+  });
+
   /* ---------- Carousels ---------- */
   $$('[data-carousel]').forEach((root) => {
     const track = $('[data-carousel-track]', root);
@@ -71,17 +122,28 @@
     });
   };
 
+  // Everything outside the open drawer is made inert so Tab stays inside the dialog.
+  const pageOutsideDrawer = () => {
+    const holder = drawer && drawer.closest('body > *');
+    return $$('body > *').filter((el) => el !== holder && el.tagName !== 'SCRIPT');
+  };
+
   const openDrawer = () => {
     if (!drawer) return;
-    lastFocus = document.activeElement;
+    if (!drawer.classList.contains('is-open')) {
+      const active = document.activeElement;
+      lastFocus = active && active !== document.body ? active : $('.header__cart');
+    }
     drawer.hidden = false;
     requestAnimationFrame(() => drawer.classList.add('is-open'));
     document.body.classList.add('has-drawer');
+    pageOutsideDrawer().forEach((el) => { el.inert = true; });
     $('.drawer__panel', drawer).focus();
   };
 
   const closeDrawer = () => {
     if (!drawer) return;
+    pageOutsideDrawer().forEach((el) => { el.inert = false; });
     drawer.classList.remove('is-open');
     document.body.classList.remove('has-drawer');
     setTimeout(() => { drawer.hidden = true; }, 300);
@@ -116,6 +178,10 @@
       const qtyButton = event.target.closest('[data-cart-qty]');
       if (!qtyButton) return;
       const line = qtyButton.closest('[data-line]');
+      const lineIndex = line.dataset.line;
+      const controlIndex = $$('[data-cart-qty]', line).indexOf(qtyButton);
+      const errorEl = $('[data-cart-drawer-error]', drawer);
+      if (errorEl) errorEl.hidden = true;
       drawer.classList.add('is-loading');
       try {
         const res = await fetch(`${theme.routes.cartChange}.js`, {
@@ -129,7 +195,19 @@
           })
         });
         const data = await res.json();
+        if (!res.ok || data.status) {
+          if (errorEl) {
+            errorEl.textContent = data.description || data.message || theme.strings.cartError;
+            errorEl.hidden = false;
+          }
+          return;
+        }
         if (data.sections) renderDrawer(data.sections['cart-drawer']);
+        // The re-render replaces the focused button: put focus back on the same control,
+        // or on the panel when the line was removed.
+        const sameLine = $(`[data-line="${lineIndex}"]`, drawer);
+        const target = sameLine && $$('[data-cart-qty]', sameLine)[controlIndex];
+        (target || $('.drawer__panel', drawer)).focus();
       } catch (e) {
         window.location.href = theme.routes.cart;
       } finally {

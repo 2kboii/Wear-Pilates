@@ -45,6 +45,7 @@
             </li>
           {%- endfor -%}
         </ul>
+        <p class="form-message form-message--error drawer__error" role="alert" data-cart-drawer-error hidden></p>
 
         <div class="drawer__footer">
           {%- for discount in cart.cart_level_discount_applications -%}

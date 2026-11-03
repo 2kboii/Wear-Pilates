@@ -145,6 +145,7 @@
     },
     "reviews": {
       "type": "apps",
+      "disabled": true,
       "settings": {
         "spacing": true
       },
@@ -187,6 +188,7 @@
     },
     "newsletter": {
       "type": "newsletter",
+      "disabled": true,
       "settings": {
         "heading": "Join the Society",
         "text": "<p>New drops and studio notes, first.</p>"

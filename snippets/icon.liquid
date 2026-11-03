@@ -1,9 +1,13 @@
 {% doc %}
   Renders an inline SVG icon.
 
-  @param {string} name - search | account | cart | menu | close | chevron-left | chevron-right | chevron-down | plus | minus | instagram | pinterest | tiktok | facebook | truck | lock | return | chat
+  @param {string} name - pause | play | search | account | cart | menu | close | chevron-left | chevron-right | chevron-down | plus | minus | instagram | pinterest | tiktok | facebook | truck | lock | return | chat
 {% enddoc %}
 {%- case name -%}
+  {%- when 'pause' -%}
+    <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="currentColor"><rect x="5" y="4" width="3" height="12"/><rect x="12" y="4" width="3" height="12"/></svg>
+  {%- when 'play' -%}
+    <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4v12l10-6z"/></svg>
   {%- when 'search' -%}
     <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8.5" cy="8.5" r="6"/><path d="m13 13 5 5"/></svg>
   {%- when 'account' -%}

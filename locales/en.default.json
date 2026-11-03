@@ -10,7 +10,11 @@
     "next": "Next",
     "product_title": "Product title",
     "payment_methods": "Payment methods",
-    "pagination": "Pagination"
+    "pagination": "Pagination",
+    "pause_announcements": "Pause announcements",
+    "play_announcements": "Play announcements",
+    "pause_video": "Pause video",
+    "play_video": "Play video"
   },
   "search": {
     "title": "Search",
