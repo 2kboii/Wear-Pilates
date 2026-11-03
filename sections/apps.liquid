@@ -1,0 +1,16 @@
+<section class="apps page-width{% if section.settings.spacing %} section-spacing{% endif %}">
+  {%- for block in section.blocks -%}
+    {% render block %}
+  {%- endfor -%}
+</section>
+
+{% schema %}
+{
+  "name": "Apps",
+  "settings": [
+    { "type": "checkbox", "id": "spacing", "label": "Add vertical spacing", "default": true }
+  ],
+  "blocks": [{ "type": "@app" }],
+  "presets": [{ "name": "Apps" }]
+}
+{% endschema %}

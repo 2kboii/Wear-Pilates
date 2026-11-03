@@ -1,0 +1,24 @@
+{%- liquid
+  assign networks = 'instagram,pinterest,tiktok,facebook' | split: ','
+  assign has_any = false
+  for n in networks
+    assign key = 'social_' | append: n
+    if settings[key] != blank
+      assign has_any = true
+    endif
+  endfor
+-%}
+{%- if has_any -%}
+  <ul class="social-icons">
+    {%- for n in networks -%}
+      {%- assign key = 'social_' | append: n -%}
+      {%- if settings[key] != blank -%}
+        <li>
+          <a class="icon-button" href="{{ settings[key] }}" target="_blank" rel="noopener" aria-label="{{ n | capitalize }}">
+            {%- render 'icon', name: n -%}
+          </a>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

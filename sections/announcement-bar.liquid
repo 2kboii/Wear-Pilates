@@ -1,0 +1,72 @@
+{%- if section.blocks.size > 0 -%}
+  <div class="announcement" role="region" aria-label="{{ 'general.announcements' | t }}">
+    <div class="announcement__track{% if section.settings.scroll %} announcement__track--scroll{% endif %}" style="--speed: {{ section.settings.speed }}s;">
+      {%- assign loops = 1 -%}
+      {%- if section.settings.scroll -%}{%- assign loops = 4 -%}{%- endif -%}
+      {%- for i in (1..loops) -%}
+        <ul class="announcement__group"{% if forloop.index > 1 %} aria-hidden="true"{% endif %}>
+          {%- for block in section.blocks -%}
+            <li class="announcement__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
+              {%- else -%}
+                {{ block.settings.text | escape }}
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "class": "section-announcement",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "scroll",
+      "label": "Scrolling text",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "unit": "s",
+      "label": "Scroll duration",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Studio ready. Real life tested."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "announcement", "settings": { "text": "Studio ready. Real life tested." } },
+      { "type": "announcement", "settings": { "text": "Printed to order, just for you" } },
+      { "type": "announcement", "settings": { "text": "New: The Heritage Collection" } }
+    ]
+  }
+}
+{% endschema %}

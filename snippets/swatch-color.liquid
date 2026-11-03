@@ -1,0 +1,28 @@
+{% doc %}
+  Outputs a CSS color for a product option value: the Shopify swatch color
+  when one is set, otherwise the matching line in the theme's swatch list.
+  Outputs nothing when no color is known.
+
+  @param {object} value - A product_option_value
+{% enddoc %}
+{%- liquid
+  assign color = blank
+  if value.swatch.color
+    assign color = value.swatch.color
+  endif
+
+  if color == blank
+    assign key = value.name | downcase | strip
+    assign lines = settings.swatch_map | newline_to_br | split: '<br />'
+    for line in lines
+      assign parts = line | split: ':'
+      assign name = parts.first | downcase | strip
+      if name == key
+        assign color = parts.last | strip
+        break
+      endif
+    endfor
+  endif
+
+  echo color
+-%}

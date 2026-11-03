@@ -1,0 +1,122 @@
+{%- assign menu = section.settings.menu -%}
+<header class="header{% if section.settings.sticky %} header--sticky{% endif %}" data-header>
+  <div class="header__inner page-width">
+    <details class="header__drawer" data-menu-drawer>
+      <summary class="icon-button header__menu-toggle" aria-label="{{ 'general.menu' | t }}">
+        <span class="header__menu-open">{% render 'icon', name: 'menu' %}</span>
+        <span class="header__menu-close">{% render 'icon', name: 'close' %}</span>
+      </summary>
+      <nav class="drawer-menu" aria-label="{{ 'general.menu' | t }}">
+        <ul class="drawer-menu__list">
+          {%- for link in menu.links -%}
+            <li>
+              {%- if link.links.size > 0 -%}
+                <details class="drawer-menu__group">
+                  <summary class="drawer-menu__link">
+                    {{ link.title | escape }}
+                    {% render 'icon', name: 'chevron-down' %}
+                  </summary>
+                  <ul class="drawer-menu__sublist">
+                    <li><a class="drawer-menu__sublink" href="{{ link.url }}">{{ 'general.view_all' | t }}</a></li>
+                    {%- for child in link.links -%}
+                      <li><a class="drawer-menu__sublink" href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                </details>
+              {%- else -%}
+                <a class="drawer-menu__link" href="{{ link.url }}">{{ link.title | escape }}</a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+        <div class="drawer-menu__footer">
+          {%- if shop.customer_accounts_enabled -%}
+            <a class="drawer-menu__sublink" href="{{ routes.account_url }}">{{ 'general.account' | t }}</a>
+          {%- endif -%}
+          {% render 'social-icons' %}
+        </div>
+      </nav>
+    </details>
+
+    <nav class="header__nav" aria-label="{{ 'general.menu' | t }}">
+      <ul class="header__nav-list">
+        {%- for link in menu.links -%}
+          <li class="header__nav-item{% if link.links.size > 0 %} has-dropdown{% endif %}">
+            <a class="header__nav-link{% if link.active or link.child_active %} is-active{% endif %}" href="{{ link.url }}">
+              {{- link.title | escape -}}
+            </a>
+            {%- if link.links.size > 0 -%}
+              <ul class="header__dropdown">
+                {%- for child in link.links -%}
+                  <li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    {%- if request.page_type == 'index' -%}<h1 class="header__logo">{%- else -%}<div class="header__logo">{%- endif -%}
+      <a href="{{ routes.root_url }}">
+        {%- if settings.logo -%}
+          {%- assign logo_width = settings.logo_height | times: settings.logo.aspect_ratio | ceil | times: 2 -%}
+          {{ settings.logo | image_url: width: logo_width | image_tag: alt: shop.name, loading: 'eager', class: 'header__logo-image', width: logo_width }}
+        {%- else -%}
+          <span class="header__logo-text">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+    {%- if request.page_type == 'index' -%}</h1>{%- else -%}</div>{%- endif -%}
+
+    <div class="header__actions">
+      {%- if section.settings.show_social -%}
+        <div class="header__social">{% render 'social-icons' %}</div>
+      {%- endif -%}
+
+      <form class="header__search" action="{{ routes.search_url }}" method="get" role="search">
+        <label class="visually-hidden" for="HeaderSearch">{{ 'search.placeholder' | t }}</label>
+        <input id="HeaderSearch" type="search" name="q" placeholder="{{ 'search.placeholder' | t }}" value="{{ search.terms | escape }}">
+        <input type="hidden" name="options[prefix]" value="last">
+        <button type="submit" class="icon-button" aria-label="{{ 'search.submit' | t }}">{% render 'icon', name: 'search' %}</button>
+      </form>
+
+      <a class="icon-button header__search-mobile" href="{{ routes.search_url }}" aria-label="{{ 'search.submit' | t }}">{% render 'icon', name: 'search' %}</a>
+
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="icon-button header__account" href="{{ routes.account_url }}" aria-label="{{ 'general.account' | t }}">{% render 'icon', name: 'account' %}</a>
+      {%- endif -%}
+
+      <a class="icon-button header__cart" href="{{ routes.cart_url }}" data-cart-open aria-label="{{ 'cart.title' | t }}">
+        {% render 'icon', name: 'cart' %}
+        <span class="cart-count{% if cart.item_count == 0 %} is-empty{% endif %}" data-cart-count>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky header",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social icons",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

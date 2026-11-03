@@ -1,0 +1,86 @@
+{% doc %}
+  Product card used in grids and carousels.
+
+  @param {product} product - The product to render
+  @param {string} [sizes] - The sizes attribute for the image
+  @param {boolean} [eager] - Load the image eagerly
+{% enddoc %}
+{%- liquid
+  assign sizes = sizes | default: '(min-width: 990px) 25vw, 50vw'
+  assign loading = 'lazy'
+  if eager
+    assign loading = 'eager'
+  endif
+  assign second = product.media[1]
+  assign color_names = settings.swatch_option_names | downcase | split: ','
+  assign color_option = nil
+  for option in product.options_with_values
+    assign option_key = option.name | downcase | strip
+    for n in color_names
+      assign n_key = n | strip
+      if option_key == n_key
+        assign color_option = option
+      endif
+    endfor
+  endfor
+-%}
+<article class="card{% unless product.available %} card--sold-out{% endunless %}">
+  <a class="card__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+    {%- if product.featured_media -%}
+      {{
+        product.featured_media
+        | image_url: width: 900
+        | image_tag: sizes: sizes, widths: '300,450,600,750,900', loading: loading, class: 'card__image', alt: product.featured_media.alt | default: product.title
+      }}
+      {%- if settings.card_show_second_image and second and second.media_type == 'image' -%}
+        {{
+          second
+          | image_url: width: 900
+          | image_tag: sizes: sizes, widths: '300,450,600,750,900', loading: 'lazy', class: 'card__image card__image--hover', alt: ''
+        }}
+      {%- endif -%}
+    {%- else -%}
+      {{ 'product-apparel-1' | placeholder_svg_tag: 'card__placeholder' }}
+    {%- endif -%}
+
+    {%- if product.available == false -%}
+      <span class="badge">{{ 'products.sold_out' | t }}</span>
+    {%- elsif product.compare_at_price > product.price -%}
+      <span class="badge badge--accent">{{ 'products.sale' | t }}</span>
+    {%- endif -%}
+  </a>
+
+  <div class="card__info">
+    {%- if settings.card_show_type and product.type != blank -%}
+      <p class="card__type">{{ product.type }}</p>
+    {%- endif -%}
+    <h3 class="card__title">
+      <a href="{{ product.url }}">{{ product.title | escape }}</a>
+    </h3>
+    {% render 'price', target: product, show_from: true %}
+
+    {%- if settings.card_show_swatches and color_option and color_option.values.size > 1 -%}
+      <ul class="swatches" aria-label="{{ color_option.name | escape }}">
+        {%- for value in color_option.values limit: 5 -%}
+          {%- capture swatch -%}{% render 'swatch-color', value: value %}{%- endcapture -%}
+          {%- assign swatch = swatch | strip -%}
+          <li>
+            <a
+              class="swatch{% if swatch == blank %} swatch--unknown{% endif %}"
+              href="{{ value.variant.url | default: product.url }}"
+              title="{{ value.name | escape }}"
+              {% if swatch != blank %}
+                style="--swatch: {{ swatch }};"
+              {% endif %}
+            >
+              <span class="visually-hidden">{{ value.name | escape }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+        {%- if color_option.values.size > 5 -%}
+          <li class="swatches__more">+{{ color_option.values.size | minus: 5 }}</li>
+        {%- endif -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</article>

@@ -1,0 +1,88 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "show_type": false
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "picker": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "size": {
+          "type": "size_guide",
+          "settings": {
+            "label": "Size guide",
+            "page": "size-guide"
+          }
+        },
+        "buy": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_quantity": false,
+            "show_dynamic_checkout": true
+          }
+        },
+        "trust": {
+          "type": "trust",
+          "settings": {
+            "line_1": "Printed to order, just for you",
+            "line_2": "See our <a href=\"/pages/shipping-policy\">shipping policy</a>",
+            "line_3": "<a href=\"/pages/returns-refunds\">Returns & refunds</a>"
+          }
+        },
+        "desc": {
+          "type": "description",
+          "settings": {
+            "heading": "Description",
+            "open": true
+          }
+        },
+        "ship": {
+          "type": "collapsible",
+          "settings": {
+            "heading": "Shipping & returns",
+            "page": "shipping-policy"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "picker",
+        "size",
+        "buy",
+        "trust",
+        "desc",
+        "ship"
+      ]
+    },
+    "reviews": {
+      "type": "apps",
+      "settings": {
+        "spacing": true
+      }
+    },
+    "recs": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "Complete the look",
+        "intent": "related",
+        "limit": 4
+      }
+    }
+  },
+  "order": [
+    "main",
+    "reviews",
+    "recs"
+  ]
+}

@@ -1,43 +1,54 @@
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}">
   <head>
-    {% # Inlined CSS Variables %}
-    {% render 'css-variables' %}
-
-    {% comment %}
-      Font preloading:
-      1. Preconnect to font CDN for faster connection
-      2. Preload only the critical font variant (base weight)
-      3. Additional variants load on-demand via @font-face
-    {% endcomment %}
-    {% unless settings.type_primary_font.system? %}
-      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
-
-      {% comment %} Preload the base font variant for initial page render {% endcomment %}
-      {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
-    {% endunless %}
-
-    {% # Load and preload the critical CSS %}
-    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
-    {{ 'base.css' | asset_url | stylesheet_tag }}
-
-    {% # Social, title, etc. %}
     {% render 'meta-tags' %}
+
+    {%- if settings.favicon -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 64, height: 64 }}">
+    {%- endif -%}
+
+    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    {{ settings.type_heading_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {{ settings.type_body_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+
+    {% render 'css-variables' %}
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+    <script>
+      window.theme = {
+        routes: {
+          root: {{ routes.root_url | json }},
+          cartAdd: {{ routes.cart_add_url | json }},
+          cartChange: {{ routes.cart_change_url | json }},
+          cart: {{ routes.cart_url | json }},
+          recommendations: {{ routes.product_recommendations_url | json }}
+        },
+        cartType: {{ settings.cart_type | json }},
+        strings: {
+          addToCart: {{ 'products.add_to_cart' | t | json }},
+          soldOut: {{ 'products.sold_out' | t | json }},
+          unavailable: {{ 'products.unavailable' | t | json }},
+          adding: {{ 'products.adding' | t | json }},
+          cartError: {{ 'cart.error' | t | json }}
+        }
+      };
+    </script>
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
 
     {{ content_for_header }}
   </head>
 
-  <body>
-    {% block 'container', tag: 'div' %}
-      {% block 'header' -%}{%- endblock %}
-    {% endblock %}
+  <body class="template-{{ template.name }}">
+    <a class="skip-link" href="#MainContent">{{ 'general.skip_to_content' | t }}</a>
 
-    <main>
+    {% section 'announcement-bar' %}
+    {% section 'header' %}
+
+    <main id="MainContent" tabindex="-1">
       {{ content_for_layout }}
     </main>
 
-    {% block 'container', tag: 'div' %}
-      {% block 'footer' -%}{%- endblock %}
-    {% endblock %}
+    {% section 'footer' %}
+    {% section 'cart-drawer' %}
   </body>
 </html>

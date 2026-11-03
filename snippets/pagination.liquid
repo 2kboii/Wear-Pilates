@@ -1,0 +1,24 @@
+{% doc %}
+  Pagination links.
+
+  @param {object} paginate - The paginate object
+{% enddoc %}
+{%- if paginate.pages > 1 -%}
+  <nav class="pagination" aria-label="{{ 'general.pagination' | t }}">
+    {%- if paginate.previous -%}
+      <a class="pagination__arrow" href="{{ paginate.previous.url }}" aria-label="{{ 'general.previous' | t }}">{% render 'icon', name: 'chevron-left' %}</a>
+    {%- endif -%}
+    {%- for part in paginate.parts -%}
+      {%- if part.is_link -%}
+        <a class="pagination__page" href="{{ part.url }}">{{ part.title }}</a>
+      {%- elsif part.title == paginate.current_page -%}
+        <span class="pagination__page is-current" aria-current="page">{{ part.title }}</span>
+      {%- else -%}
+        <span class="pagination__page">{{ part.title }}</span>
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if paginate.next -%}
+      <a class="pagination__arrow" href="{{ paginate.next.url }}" aria-label="{{ 'general.next' | t }}">{% render 'icon', name: 'chevron-right' %}</a>
+    {%- endif -%}
+  </nav>
+{%- endif -%}

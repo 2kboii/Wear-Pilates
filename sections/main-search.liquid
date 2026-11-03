@@ -1,0 +1,47 @@
+<section class="search-page page-width">
+  <h1 class="h1">{{ 'search.title' | t }}</h1>
+
+  <form class="search-page__form" action="{{ routes.search_url }}" method="get" role="search">
+    <label class="visually-hidden" for="SearchPage">{{ 'search.placeholder' | t }}</label>
+    <input id="SearchPage" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}" autofocus>
+    <input type="hidden" name="options[prefix]" value="last">
+    <button type="submit" class="button">{{ 'search.submit' | t }}</button>
+  </form>
+
+  {%- if search.performed -%}
+    {%- paginate search.results by 24 -%}
+      {% render 'facets', results: search, terms: search.terms %}
+
+      {%- if search.results_count == 0 -%}
+        <div class="empty-state">
+          <p>{{ 'search.no_results' | t: terms: search.terms }}</p>
+        </div>
+      {%- else -%}
+        <ul class="product-grid product-grid--collection" style="--columns: 4;">
+          {%- for item in search.results -%}
+            <li>
+              {%- if item.object_type == 'product' -%}
+                {% render 'product-card', product: item %}
+              {%- else -%}
+                <article class="search-result">
+                  <p class="eyebrow">{{ item.object_type }}</p>
+                  <h3 class="card__title"><a href="{{ item.url }}">{{ item.title | escape }}</a></h3>
+                  <p class="search-result__excerpt">{{ item.content | strip_html | truncatewords: 24 }}</p>
+                </article>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Search",
+  "settings": []
+}
+{% endschema %}

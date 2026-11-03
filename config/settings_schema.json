@@ -1,83 +1,203 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Skeleton",
-    "theme_version": "0.1.0",
-    "theme_author": "Shopify",
-    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
-    "theme_support_url": "https://support.shopify.com/"
+    "theme_name": "Wear Pilates",
+    "theme_version": "1.0.0",
+    "theme_author": "Wear Pilates",
+    "theme_documentation_url": "https://wearpilates.com",
+    "theme_support_url": "https://wearpilates.com/pages/contact"
   },
   {
-    "name": "t:general.typography",
+    "name": "Logo",
     "settings": [
       {
-        "type": "header",
-        "content": "t:general.fonts"
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_height",
+        "min": 20,
+        "max": 80,
+        "step": 2,
+        "unit": "px",
+        "label": "Logo height",
+        "default": 36
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_heading_font",
+        "default": "montserrat_n6",
+        "label": "Headings"
       },
       {
         "type": "font_picker",
-        "id": "type_primary_font",
-        "default": "work_sans_n4",
-        "label": "t:general.primary"
+        "id": "type_body_font",
+        "default": "montserrat_n4",
+        "label": "Body"
       }
     ]
   },
   {
-    "name": "t:general.layout",
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_background",
+        "default": "#FFFFFF",
+        "label": "Background"
+      },
+      {
+        "type": "color",
+        "id": "color_foreground",
+        "default": "#111111",
+        "label": "Text"
+      },
+      {
+        "type": "color",
+        "id": "color_muted",
+        "default": "#6E6E6E",
+        "label": "Secondary text"
+      },
+      {
+        "type": "color",
+        "id": "color_panel",
+        "default": "#ECEBE8",
+        "label": "Image panels"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "default": "#7A2E34",
+        "label": "Accent (sale, badges)"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "default": "#E2E2E2",
+        "label": "Borders"
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "min": 1000,
+        "max": 1800,
+        "step": 20,
+        "unit": "px",
+        "label": "Page width",
+        "default": 1440
+      },
+      {
+        "type": "range",
+        "id": "page_margin",
+        "min": 12,
+        "max": 60,
+        "step": 2,
+        "unit": "px",
+        "label": "Page side margin",
+        "default": 32
+      }
+    ]
+  },
+  {
+    "name": "Product cards",
     "settings": [
       {
         "type": "select",
-        "id": "max_page_width",
-        "label": "t:labels.page_width",
+        "id": "card_image_ratio",
+        "label": "Image ratio",
         "options": [
-          {
-            "value": "90rem",
-            "label": "t:options.page_width.narrow"
-          },
-          {
-            "value": "110rem",
-            "label": "t:options.page_width.wide"
-          }
+          { "value": "4/5", "label": "Portrait 4:5" },
+          { "value": "3/4", "label": "Portrait 3:4" },
+          { "value": "1/1", "label": "Square" }
         ],
-        "default": "90rem"
+        "default": "4/5"
       },
       {
-        "type": "range",
-        "id": "min_page_margin",
-        "min": 10,
-        "max": 100,
-        "step": 1,
-        "unit": "px",
-        "label": "t:labels.page_margin",
-        "default": 20
+        "type": "checkbox",
+        "id": "card_show_second_image",
+        "label": "Show second image on hover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_type",
+        "label": "Show product type above title",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_swatches",
+        "label": "Show color swatches",
+        "default": true
       }
     ]
   },
   {
-    "name": "t:general.colors",
+    "name": "Color swatches",
     "settings": [
       {
-        "type": "color",
-        "id": "background_color",
-        "default": "#FFFFFF",
-        "label": "t:labels.background"
+        "type": "paragraph",
+        "content": "Swatches use the color set in Shopify (Settings > Products > Swatches) when available. Otherwise the theme uses this list. One per line: Color name: #hex"
       },
       {
-        "type": "color",
-        "id": "foreground_color",
-        "default": "#333333",
-        "label": "t:labels.foreground"
+        "type": "text",
+        "id": "swatch_option_names",
+        "label": "Option names treated as color",
+        "default": "Color, Colour"
       },
       {
-        "type": "range",
-        "id": "input_corner_radius",
-        "min": 0,
-        "max": 10,
-        "step": 1,
-        "unit": "px",
-        "label": "t:labels.input_corner_radius",
-        "default": 4
+        "type": "textarea",
+        "id": "swatch_map",
+        "label": "Color list",
+        "default": "White: #FFFFFF\nBlack: #111111\nPale Pink: #F3D9DC\nLilac: #C9B7DA\nMauve: #B08A94\nMaroon: #6E2A32\nNavy: #1F2A44\nCharcoal Grey: #4A4A4A\nBrown: #6B4A33"
       }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "After adding to cart",
+        "options": [
+          { "value": "drawer", "label": "Open cart drawer" },
+          { "value": "page", "label": "Go to cart page" }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_show_note",
+        "label": "Show order note",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      { "type": "text", "id": "social_instagram", "label": "Instagram URL" },
+      { "type": "text", "id": "social_pinterest", "label": "Pinterest URL" },
+      { "type": "text", "id": "social_tiktok", "label": "TikTok URL" },
+      { "type": "text", "id": "social_facebook", "label": "Facebook URL" }
     ]
   }
 ]

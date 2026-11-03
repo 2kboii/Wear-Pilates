@@ -1,0 +1,205 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-split",
+      "settings": {
+        "video_1": "shopify://files/videos/E.mp4",
+        "image_1": "shopify://shop_images/ChatGPT_Image_22_may_2026_23_24_10.png",
+        "image_2": "shopify://shop_images/20260516184955-1f151580-7c34-651c-ae04-ae7dbc7a6ccf.png",
+        "heading": "Align.\nBreathe.\nFlow.",
+        "button_label": "Discover the collection",
+        "button_link": "shopify://collections/heritage",
+        "text_color": "dark",
+        "height": "large",
+        "full_width": false
+      }
+    },
+    "edit": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "The Heritage Edit",
+        "text": "<p>Vintage athletic pieces in coordinated colors, made for studio days, slow mornings and everything in between.</p>",
+        "align": "center",
+        "collection": "heritage",
+        "limit": 12,
+        "layout": "carousel",
+        "columns": 6,
+        "show_view_all": true
+      }
+    },
+    "promos": {
+      "type": "promo-panels",
+      "blocks": {
+        "p1": {
+          "type": "panel",
+          "settings": {
+            "label": "Shop tops & sweaters",
+            "link": "shopify://collections/remeras",
+            "image_small": "shopify://shop_images/Morning_Pilates.png",
+            "caption": "From first class to last errand.",
+            "image_large": "shopify://shop_images/de7462aa-a842-45e2-86dd-d90567770bf4.png"
+          }
+        },
+        "p2": {
+          "type": "panel",
+          "settings": {
+            "label": "Shop accessories",
+            "link": "shopify://collections/accesorios",
+            "image_small": "shopify://shop_images/2330031681391585915_2048.jpg",
+            "caption": "Small details, carried everywhere.",
+            "image_large": "shopify://shop_images/basbeall_cap.png"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2"
+      ],
+      "settings": {}
+    },
+    "trust": {
+      "type": "trust-row",
+      "blocks": {
+        "t1": {
+          "type": "item",
+          "settings": {
+            "icon": "print",
+            "title": "Printed to order",
+            "text": "Made for you, one piece at a time"
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "title": "Shipping policy",
+            "link": "shopify://pages/shipping-policy"
+          }
+        },
+        "t3": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "title": "Returns & refunds",
+            "link": "shopify://pages/returns-refunds"
+          }
+        },
+        "t4": {
+          "type": "item",
+          "settings": {
+            "icon": "lock",
+            "title": "Secure checkout"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {}
+    },
+    "categories": {
+      "type": "category-grid",
+      "settings": {
+        "heading": "What are you looking for?",
+        "columns": 2
+      },
+      "blocks": {
+        "c1": {
+          "type": "category",
+          "settings": {
+            "collection": "remeras",
+            "label": "Tops & Sweaters"
+          }
+        },
+        "c2": {
+          "type": "category",
+          "settings": {
+            "collection": "pilates-bottoms",
+            "label": "Bottoms"
+          }
+        },
+        "c3": {
+          "type": "category",
+          "settings": {
+            "collection": "pilates-hats-baseball-caps",
+            "label": "Hats & Caps"
+          }
+        },
+        "c4": {
+          "type": "category",
+          "settings": {
+            "collection": "accesorios",
+            "label": "Accessories"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ]
+    },
+    "reviews": {
+      "type": "apps",
+      "settings": {
+        "spacing": true
+      },
+      "blocks": {
+        "jm": {
+          "type": "shopify://apps/judge-me-reviews/blocks/cards_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "show_sample_reviews": false,
+            "reviews_selection": "all",
+            "star_rating": "all",
+            "show_review_media": true,
+            "display_order": "media_first",
+            "no_image_fallback": "review_text_only",
+            "max_reviews": 12,
+            "review_length": "small",
+            "text_size": "small",
+            "image_ratio": "0.75",
+            "reviews_shown": 4,
+            "show_reviewer_name": true,
+            "show_product_name": true,
+            "hide_arrows_mobile": true,
+            "arrows_position": "sides",
+            "max_width": 1440,
+            "corner_styling": "soft",
+            "header_text_color": "#111111",
+            "text_color": "#111111",
+            "card_color": "#ECEBE8",
+            "stars_color": "#111111",
+            "arrows_color": "#111111",
+            "transition_speed": 5,
+            "header_text": "Customers are saying",
+            "show_average_rating": true,
+            "rating_display": "default"
+          }
+        }
+      },
+      "block_order": [
+        "jm"
+      ]
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Join the Society",
+        "text": "<p>New drops and studio notes, first.</p>"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "edit",
+    "promos",
+    "trust",
+    "categories",
+    "reviews",
+    "newsletter"
+  ]
+}

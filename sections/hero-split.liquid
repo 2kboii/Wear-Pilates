@@ -1,0 +1,86 @@
+{%- liquid
+  assign loading = 'lazy'
+  if section.index == 1
+    assign loading = 'eager'
+  endif
+-%}
+<section class="hero-split hero-split--{{ section.settings.height }} page-width{% if section.settings.full_width %} hero-split--full{% endif %}">
+  <div class="hero-split__media-row">
+    {%- for i in (1..2) -%}
+      {%- liquid
+        assign img_key = 'image_' | append: i
+        assign vid_key = 'video_' | append: i
+        assign image = section.settings[img_key]
+        assign video = section.settings[vid_key]
+      -%}
+      <div class="hero-split__media{% if i == 2 %} hero-split__media--second{% endif %}">
+        {%- if video != blank -%}
+          {{ video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, image_size: '1200x', class: 'hero-split__video' }}
+        {%- elsif image != blank -%}
+          {{ image | image_url: width: 1800 | image_tag: sizes: '(min-width: 750px) 50vw, 100vw', widths: '600,900,1200,1500,1800', loading: loading, fetchpriority: 'high', class: 'hero-split__image' }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <div class="hero-split__content hero-split__content--{{ section.settings.text_color }}">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="hero-split__heading">{{ section.settings.heading | newline_to_br }}</h2>
+    {%- endif -%}
+    {%- if section.settings.button_label != blank -%}
+      <a class="text-link text-link--large" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
+        {{- section.settings.button_label | escape -}}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero split",
+  "settings": [
+    { "type": "header", "content": "Left" },
+    { "type": "image_picker", "id": "image_1", "label": "Image" },
+    { "type": "video", "id": "video_1", "label": "Video (replaces image)" },
+    { "type": "header", "content": "Right" },
+    { "type": "image_picker", "id": "image_2", "label": "Image" },
+    { "type": "video", "id": "video_2", "label": "Video (replaces image)" },
+    { "type": "header", "content": "Text" },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Each line break starts a new line.",
+      "default": "Align.\nBreathe.\nFlow."
+    },
+    { "type": "text", "id": "button_label", "label": "Link label", "default": "Discover the collection" },
+    { "type": "url", "id": "button_link", "label": "Link" },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "options": [
+        { "value": "dark", "label": "Dark" },
+        { "value": "light", "label": "Light" }
+      ],
+      "default": "dark"
+    },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "options": [
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" },
+        { "value": "screen", "label": "Full screen" }
+      ],
+      "default": "large"
+    },
+    { "type": "checkbox", "id": "full_width", "label": "Full page width", "default": false }
+  ],
+  "presets": [{ "name": "Hero split" }]
+}
+{% endschema %}

@@ -1,0 +1,63 @@
+<section class="trust-row page-width section-spacing--small">
+  <ul class="trust-row__list" style="--count: {{ section.blocks.size }};">
+    {%- for block in section.blocks -%}
+      <li class="trust-item" {{ block.shopify_attributes }}>
+        <span class="trust-item__icon">{% render 'icon', name: block.settings.icon %}</span>
+        <div>
+          <p class="trust-item__title">
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}">{{ block.settings.title | escape }}</a>
+            {%- else -%}
+              {{ block.settings.title | escape }}
+            {%- endif -%}
+          </p>
+          {%- if block.settings.text != blank -%}
+            <p class="trust-item__text">{{ block.settings.text | escape }}</p>
+          {%- endif -%}
+        </div>
+      </li>
+    {%- endfor -%}
+  </ul>
+</section>
+
+{% schema %}
+{
+  "name": "Trust row",
+  "max_blocks": 4,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "print", "label": "Printed to order" },
+            { "value": "truck", "label": "Shipping" },
+            { "value": "return", "label": "Returns" },
+            { "value": "lock", "label": "Secure checkout" },
+            { "value": "chat", "label": "Support" }
+          ],
+          "default": "truck"
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "Title" },
+        { "type": "text", "id": "text", "label": "Text" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust row",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "print", "title": "Printed to order" } },
+        { "type": "item", "settings": { "icon": "lock", "title": "Secure checkout" } },
+        { "type": "item", "settings": { "icon": "return", "title": "Returns & refunds" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

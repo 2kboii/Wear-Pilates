@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-cart",
+      "settings": {}
+    },
+    "recs": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "You may also like",
+        "align": "center",
+        "collection": "studio-staples",
+        "limit": 8,
+        "layout": "carousel",
+        "columns": 4,
+        "show_view_all": false
+      }
+    }
+  },
+  "order": [
+    "main",
+    "recs"
+  ]
+}

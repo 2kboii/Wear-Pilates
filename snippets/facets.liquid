@@ -1,0 +1,106 @@
+{% doc %}
+  Filter drawer and sort control for collection and search pages.
+  Submits as a plain GET form; theme.js submits on change.
+
+  @param {object} results - The collection or search object
+  @param {string} [terms] - Search terms to preserve on the search page
+{% enddoc %}
+{%- liquid
+  assign sort_by = results.sort_by | default: results.default_sort_by
+  assign active_count = 0
+  assign total = results.products_count | default: results.results_count
+  for filter in results.filters
+    assign active_count = active_count | plus: filter.active_values.size
+    if filter.type == 'price_range'
+      if filter.min_value.value != null or filter.max_value.value != null
+        assign active_count = active_count | plus: 1
+      endif
+    endif
+  endfor
+-%}
+<form class="facets" data-facets-form>
+  {%- if terms != blank -%}
+    <input type="hidden" name="q" value="{{ terms | escape }}">
+    <input type="hidden" name="options[prefix]" value="last">
+  {%- endif -%}
+
+  <div class="facets__bar">
+    {%- if results.filters.size > 0 -%}
+      <details class="facets__drawer" data-facets-drawer>
+        <summary class="facets__toggle">
+          {{ 'collections.filter' | t }}{% if active_count > 0 %} ({{ active_count }}){% endif %}
+        </summary>
+        <div class="facets__panel">
+          {%- for filter in results.filters -%}
+            <details class="facet"{% if filter.active_values.size > 0 or forloop.first %} open{% endif %}>
+              <summary class="facet__summary">{{ filter.label | escape }}{% render 'icon', name: 'chevron-down' %}</summary>
+              {%- case filter.type -%}
+                {%- when 'list', 'boolean' -%}
+                  <ul class="facet__list">
+                    {%- for value in filter.values -%}
+                      <li>
+                        <label class="checkbox{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                          <input
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          >
+                          <span>{{ value.label | escape }}</span>
+                          <span class="checkbox__count">{{ value.count }}</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- when 'price_range' -%}
+                  <div class="facet__price">
+                    <label>
+                      <span class="visually-hidden">{{ 'collections.from' | t }}</span>
+                      <input
+                        type="number"
+                        name="{{ filter.min_value.param_name }}"
+                        placeholder="{{ 0 | money_without_currency }}"
+                        {% if filter.min_value.value %}value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"{% endif %}
+                        min="0"
+                        step="0.01"
+                      >
+                    </label>
+                    <span aria-hidden="true">&ndash;</span>
+                    <label>
+                      <span class="visually-hidden">{{ 'collections.to' | t }}</span>
+                      <input
+                        type="number"
+                        name="{{ filter.max_value.param_name }}"
+                        placeholder="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                        {% if filter.max_value.value %}value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"{% endif %}
+                        min="0"
+                        step="0.01"
+                      >
+                    </label>
+                  </div>
+              {%- endcase -%}
+            </details>
+          {%- endfor -%}
+          <div class="facets__actions">
+            {%- if active_count > 0 -%}
+              <a class="text-link" href="{{ results.url | default: routes.search_url }}{% if terms != blank %}?q={{ terms | url_encode }}{% endif %}">{{ 'collections.clear_all' | t }}</a>
+            {%- endif -%}
+            <button type="submit" class="button">{{ 'collections.apply' | t }}</button>
+          </div>
+        </div>
+      </details>
+    {%- endif -%}
+
+    <p class="facets__count">{{ 'collections.product_count' | t: count: total }}</p>
+
+    <label class="facets__sort">
+      <span class="visually-hidden">{{ 'collections.sort_by' | t }}</span>
+      <select name="sort_by" data-facets-autosubmit>
+        {%- for option in results.sort_options -%}
+          <option value="{{ option.value }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name | escape }}</option>
+        {%- endfor -%}
+      </select>
+    </label>
+  </div>
+</form>
