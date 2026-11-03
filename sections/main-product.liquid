@@ -149,7 +149,9 @@
                 </button>
                 <p class="form-message form-message--error" role="alert" data-product-error hidden></p>
                 {%- if block.settings.show_dynamic_checkout -%}
-                  {{ form | payment_button }}
+                  <div data-dynamic-checkout{% unless current_variant.available %} hidden{% endunless %}>
+                    {{ form | payment_button }}
+                  </div>
                 {%- endif -%}
               {%- endform -%}
             </div>

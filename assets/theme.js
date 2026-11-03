@@ -209,6 +209,9 @@
       });
       markAvailability(opts);
 
+      const dynamicCheckout = $('[data-dynamic-checkout]', root);
+      if (dynamicCheckout) dynamicCheckout.hidden = !(variant && variant.available);
+
       if (!variant) {
         button.disabled = true;
         buttonText.textContent = theme.strings.unavailable;

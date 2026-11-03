@@ -180,7 +180,7 @@ select {
   min-height: 64px;
   gap: 16px;
 }
-.header__nav-list { display: flex; flex-wrap: wrap; gap: 4px 26px; }
+.header__nav-list { display: flex; flex-wrap: nowrap; gap: 4px 26px; white-space: nowrap; }
 .header__nav-item { position: relative; }
 .header__nav-link {
   display: block;
@@ -227,7 +227,8 @@ select {
 
 .header__drawer { display: none; }
 
-@media (max-width: 989px) {
+/* Nav + search need ~1100px on one line; below that use the drawer. */
+@media (max-width: 1099px) {
   .header__inner { grid-template-columns: auto 1fr auto; min-height: 56px; }
   .header__nav, .header__search, .header__social, .header__account { display: none; }
   .header__search-mobile { display: inline-flex; }
@@ -279,7 +280,7 @@ select {
   padding: 24px;
 }
 .hero-split__content a { pointer-events: auto; }
-.hero-split__content--light { color: #fff; }
+.hero-split__content--light { color: #fff; background: rgba(0, 0, 0, .2); text-shadow: 0 1px 12px rgba(0, 0, 0, .25); }
 .hero-split__heading { font-size: clamp(30px, 4.2vw, 58px); letter-spacing: 0.14em; line-height: 1.22; }
 
 @media (max-width: 749px) {

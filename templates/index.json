@@ -9,7 +9,7 @@
         "heading": "Align.\nBreathe.\nFlow.",
         "button_label": "Discover the collection",
         "button_link": "shopify://collections/heritage",
-        "text_color": "dark",
+        "text_color": "light",
         "height": "large",
         "full_width": false
       }
@@ -167,7 +167,7 @@
             "show_product_name": true,
             "hide_arrows_mobile": true,
             "arrows_position": "sides",
-            "max_width": 1440,
+            "max_width": 1400,
             "corner_styling": "soft",
             "header_text_color": "#111111",
             "text_color": "#111111",
