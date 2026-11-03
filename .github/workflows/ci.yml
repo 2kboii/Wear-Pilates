@@ -1,12 +1,15 @@
 name: CI
-on: [push]
+on: [push, pull_request]
 jobs:
   theme-check:
     name: Theme Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Theme Check
-        uses: shopify/theme-check-action@v2
+      - uses: actions/setup-node@v4
         with:
-          token: ${{ github.token }}
+          node-version: 20
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli@latest
+      - name: Theme Check
+        run: shopify theme check --fail-level error
